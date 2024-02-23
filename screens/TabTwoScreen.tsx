@@ -1,19 +1,30 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View,FlatList } from 'react-native'
+import React from 'react';
+import { useMyBooks } from '../context/MyBooksProvider';
+import BookItem from '../components/BookItem';
+
+
+
+
 
 const TabTwoScreen = () => {
+    
+    const { savedBooks } = useMyBooks();
   return (
     <View style={styles.container}>
-      <Text>TabTwoScreen</Text>
+      <FlatList
+        data={savedBooks}
+        renderItem={({ item }) => <BookItem book={item} />}
+      />
     </View>
-  )
+  );
 }
+
 
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        alignItems:"center",
-        justifyContent:"center",
+       padding:10,
     }
 })
 
