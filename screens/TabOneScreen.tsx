@@ -1,6 +1,7 @@
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, StyleSheet, Text, View,FlatList } from 'react-native'
 import React from 'react'
 import { gql, useQuery } from '@apollo/client';
+import BookItem from '../components/BookItem';
 
 
 const query = gql`
@@ -52,7 +53,20 @@ const TabOneScreen = () => {
           <Text>{error.message}</Text>
         </View>
       )}
-      <Text>Hello World</Text>
+     <FlatList
+  data={data?.googleBooksSearch?.items || []}
+  renderItem={({ item }) => (
+    <BookItem
+      book={{
+        title: item.volumeInfo.title,
+        image: item.volumeInfo.imageLinks.thumbnail,
+        authors: item.volumeInfo.authors,
+        isbn: "",
+      }}
+    />
+  )}
+  showsVerticalScrollIndicator={false}
+/>
     </View>
   )
 }
@@ -60,8 +74,8 @@ const TabOneScreen = () => {
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        alignItems:"center",
-        justifyContent:"center",
+        padding:10,
+       
     },
     title:{
         fontSize:25,
