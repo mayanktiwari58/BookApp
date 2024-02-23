@@ -8,7 +8,7 @@ import {
   Button,
 } from "react-native";
 import React, { useState } from "react";
-import { gql, useQuery,useLazyQuery } from "@apollo/client";
+import { gql, useQuery, useLazyQuery } from "@apollo/client";
 import BookItem from "../components/BookItem";
 
 const query = gql`
@@ -45,8 +45,29 @@ const query = gql`
 
 const TabOneScreen = () => {
   const [search, setSearch] = useState("");
+  const [provider, setProvider] = useState<
+    "googleBooksSearch" | "openLibrarySearch"
+  >("googleBooksSearch");
+
   const [runQuery, { data, loading, error }] = useLazyQuery(query);
-  
+
+  const parseBook = (item:any):Book => {
+    if (provider === "googleBooksSearch") {
+      return {
+        title: item.volumeInfo.title,
+        image: item.volumeInfo.imageLinks?.thumbnail,
+        authors: item.volumeInfo.authors,
+        isbn: item.volumeInfo.industryIdentifiers?.[0]?.identifier,
+    };
+} else {
+  return {
+    title: item.title,
+    authors: item.author_name,
+    image: `https://covers.openlibrary.org/b/olid/${item.cover_edition_key}-M.jpg`,
+      isbn: item.isbn?.[0],
+      };
+}
+};
 
   return (
     <View style={styles.container}>
@@ -57,8 +78,36 @@ const TabOneScreen = () => {
           placeholder="search..."
           style={styles.input}
         />
-        <Button title="search" onPress={()=>runQuery({variables:{q:search}})} />
+        <Button 
+          title="search"
+          onPress={() => runQuery({ variables: { q: search } })}
+       />
       </View>
+
+      
+      <View style={styles.tabs}>
+  <Text
+    style={
+      provider === "googleBooksSearch"
+        ? { fontWeight: "bold", color: "royalblue" }
+        : {}
+    }
+    onPress={() => setProvider("googleBooksSearch")}
+  >
+    Google Books
+  </Text>
+  <Text
+    style={
+      provider === "openLibrarySearch"
+        ? { fontWeight: "bold", color: "royalblue" }
+        : {}
+    }
+    onPress={() => setProvider("openLibrarySearch")}
+  >
+    Open Library
+  </Text>
+</View>
+
       {loading && <ActivityIndicator />}
       {error && (
         <View style={styles.container}>
@@ -67,15 +116,14 @@ const TabOneScreen = () => {
         </View>
       )}
       <FlatList
-        data={data?.googleBooksSearch?.items || []}
+         data={
+            provider === "googleBooksSearch"
+              ? data?.googleBooksSearch?.items
+              : data?.openLibrarySearch?.docs || []
+          }
         renderItem={({ item }) => (
           <BookItem
-            book={{
-              title: item.volumeInfo.title,
-              image: item.volumeInfo.imageLinks?.thumbnail,
-              authors: item.volumeInfo.authors,
-              isbn: item.volumeInfo.industryIdentifiers?.[0]?.identifier,
-            }}
+            book={parseBook(item)}
           />
         )}
         showsVerticalScrollIndicator={false}
@@ -95,16 +143,23 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: "row",
+    justifyContent: "space-between",
     padding: 1,
     alignItems: "center",
   },
   input: {
     flex: 1,
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderRadius: 7,
     padding: 5,
     marginVertical: 5,
     borderColor: "#808080",
+  },
+  tabs: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    height: 50,
+    alignItems: "center",
   },
 });
 
