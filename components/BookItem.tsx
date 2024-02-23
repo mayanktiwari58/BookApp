@@ -20,7 +20,7 @@ const BookItem = ({ book }: BookItemProps) => {
           style={[styles.button, saved ? { backgroundColor: "lightgray" } : {}]}
           onPress={() => onToggleSaved(book)}
         >
-          <Text style={styles.buttonText}>
+          <Text style={[styles.buttonText, saved ? { color: "#FF0000" } : {}]}>
             {saved ? "Remove" : "Want to Read"}
           </Text>
         </Pressable>
