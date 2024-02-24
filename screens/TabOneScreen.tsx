@@ -8,66 +8,16 @@ import {
   Button,
 } from "react-native";
 import React, { useState } from "react";
-import { gql, useQuery, useLazyQuery } from "@apollo/client";
+import {useLazyQuery } from "@apollo/client";
 import BookItem from "../components/BookItem";
-
-const query = gql`
-  query SearchBooks($q: String) {
-    googleBooksSearch(q: $q, country: "US") {
-      items {
-        id
-        volumeInfo {
-          authors
-          averageRating
-          description
-          imageLinks {
-            thumbnail
-          }
-          title
-          subtitle
-          industryIdentifiers {
-            identifier
-            type
-          }
-        }
-      }
-    }
-    openLibrarySearch(q: $q) {
-      docs {
-        author_name
-        title
-        cover_edition_key
-        isbn
-      }
-    }
-  }
-`;
+import { SearchQuery } from "./queries";
+import { parseBook } from "../services/bookService";
 
 const TabOneScreen = () => {
   const [search, setSearch] = useState("");
-  const [provider, setProvider] = useState<
-    "googleBooksSearch" | "openLibrarySearch"
-  >("googleBooksSearch");
+  const [provider, setProvider] = useState<BookProvider>("googleBooksSearch");
 
-  const [runQuery, { data, loading, error }] = useLazyQuery(query);
-
-  const parseBook = (item:any):Book => {
-    if (provider === "googleBooksSearch") {
-      return {
-        title: item.volumeInfo.title,
-        image: item.volumeInfo.imageLinks?.thumbnail,
-        authors: item.volumeInfo.authors,
-        isbn: item.volumeInfo.industryIdentifiers?.[0]?.identifier,
-    };
-} else {
-  return {
-    title: item.title,
-    authors: item.author_name,
-    image: `https://covers.openlibrary.org/b/olid/${item.cover_edition_key}-M.jpg`,
-      isbn: item.isbn?.[0],
-      };
-}
-};
+  const [runQuery, { data, loading, error }] = useLazyQuery(SearchQuery);
 
   return (
     <View style={styles.container}>
@@ -78,35 +28,34 @@ const TabOneScreen = () => {
           placeholder="search..."
           style={styles.input}
         />
-        <Button 
+        <Button
           title="search"
           onPress={() => runQuery({ variables: { q: search } })}
-       />
+        />
       </View>
 
-      
       <View style={styles.tabs}>
-  <Text
-    style={
-      provider === "googleBooksSearch"
-        ? { fontWeight: "bold", color: "royalblue" }
-        : {}
-    }
-    onPress={() => setProvider("googleBooksSearch")}
-  >
-    Google Books
-  </Text>
-  <Text
-    style={
-      provider === "openLibrarySearch"
-        ? { fontWeight: "bold", color: "royalblue" }
-        : {}
-    }
-    onPress={() => setProvider("openLibrarySearch")}
-  >
-    Open Library
-  </Text>
-</View>
+        <Text
+          style={
+            provider === "googleBooksSearch"
+              ? { fontWeight: "bold", color: "royalblue" }
+              : {}
+          }
+          onPress={() => setProvider("googleBooksSearch")}
+        >
+          Google Books
+        </Text>
+        <Text
+          style={
+            provider === "openLibrarySearch"
+              ? { fontWeight: "bold", color: "royalblue" }
+              : {}
+          }
+          onPress={() => setProvider("openLibrarySearch")}
+        >
+          Open Library
+        </Text>
+      </View>
 
       {loading && <ActivityIndicator />}
       {error && (
@@ -116,16 +65,12 @@ const TabOneScreen = () => {
         </View>
       )}
       <FlatList
-         data={
-            provider === "googleBooksSearch"
-              ? data?.googleBooksSearch?.items
-              : data?.openLibrarySearch?.docs || []
-          }
-        renderItem={({ item }) => (
-          <BookItem
-            book={parseBook(item)}
-          />
-        )}
+        data={
+          provider === "googleBooksSearch"
+            ? data?.googleBooksSearch?.items
+            : data?.openLibrarySearch?.docs || []
+        }
+        renderItem={({ item }) => <BookItem book={parseBook(item, provider)} />}
         showsVerticalScrollIndicator={false}
       />
     </View>

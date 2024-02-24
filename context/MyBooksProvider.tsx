@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { Children, useEffect } from "react";
+import { StyleSheet} from "react-native";
+import React, {useEffect } from "react";
 import { createContext, useContext, ReactNode, useState } from "react";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import BookItem from "../components/BookItem";
 
 type MyBooksContextType = {
@@ -15,24 +15,24 @@ type Props = {
 };
 
 const MyBooksContext = createContext<MyBooksContextType>({
-    onToggleSaved: () => {},
-    isBookSaved: () => false,
-    savedBooks: [],
+  onToggleSaved: () => {},
+  isBookSaved: () => false,
+  savedBooks: [],
 });
 
 const MyBooksProvider = ({ children }: Props) => {
   const [savedBooks, setSavedBooks] = useState<Book[]>([]);
-  const [loaded, setLoaded]= useState(false);
+  const [loaded, setLoaded] = useState(false);
 
-  useEffect(()=>{
-    loadData(); 
-  },[]) // load data when component mount
+  useEffect(() => {
+    loadData();
+  }, []); // load data when component mount
 
-  useEffect(()=>{
-    if(loaded){
+  useEffect(() => {
+    if (loaded) {
       persistData();
     }
-  },[savedBooks]) // persist data every time it changes
+  }, [savedBooks]); // persist data every time it changes
 
   const areBooksTheSame = (a: Book, b: Book) => {
     return JSON.stringify(a) === JSON.stringify(b);
@@ -54,16 +54,16 @@ const MyBooksProvider = ({ children }: Props) => {
     }
   };
 
-  const persistData=async ()=>{
+  const persistData = async () => {
     //write data to local storage
-  await AsyncStorage.setItem("booksData", JSON.stringify(savedBooks));
+    await AsyncStorage.setItem("booksData", JSON.stringify(savedBooks));
   };
 
-  const loadData = async()=>{
+  const loadData = async () => {
     //read data to local storage
-    const dataString=await AsyncStorage.getItem("booksData");
-    if(dataString){
-      const items= JSON.parse(dataString);
+    const dataString = await AsyncStorage.getItem("booksData");
+    if (dataString) {
+      const items = JSON.parse(dataString);
       setSavedBooks(items);
     }
     setLoaded(true);

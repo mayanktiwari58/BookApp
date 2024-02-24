@@ -1,6 +1,5 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View,Image } from "react-native";
-import { NavigationContainer, TabActions } from "@react-navigation/native";
+import { StyleSheet,Image } from "react-native";
+import { NavigationContainer} from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import TabOneScreen from "./screens/TabOneScreen";
@@ -72,7 +71,7 @@ const styles = StyleSheet.create({
   },
   iconStyle:{
     width:"100%",
-    height:35,
+    height:30,
     aspectRatio:1,
     borderRadius:10,
   },

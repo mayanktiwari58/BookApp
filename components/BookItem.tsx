@@ -48,19 +48,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
   },
-  button:{
-    backgroundColor:"#1fd655",
-    alignSelf:"flex-start",
-    marginTop:"auto",
-    marginVertical:10,
-    padding:7,
-    paddingHorizontal:15,
-    borderRadius:5,
+  button: {
+    backgroundColor: "#1fd655",
+    alignSelf: "flex-start",
+    marginTop: "auto",
+    marginVertical: 10,
+    padding: 7,
+    paddingHorizontal: 15,
+    borderRadius: 5,
   },
-  buttonText:{
-    color:"#fff",
-    fontWeight:"600",
-  }
+  buttonText: {
+    color: "#fff",
+    fontWeight: "600",
+  },
 });
 
 export default BookItem;
