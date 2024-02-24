@@ -1,6 +1,8 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { Children } from "react";
+import React, { Children, useEffect } from "react";
 import { createContext, useContext, ReactNode, useState } from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import BookItem from "../components/BookItem";
 
 type MyBooksContextType = {
   onToggleSaved: (book: Book) => void;
@@ -20,6 +22,17 @@ const MyBooksContext = createContext<MyBooksContextType>({
 
 const MyBooksProvider = ({ children }: Props) => {
   const [savedBooks, setSavedBooks] = useState<Book[]>([]);
+  const [loaded, setLoaded]= useState(false);
+
+  useEffect(()=>{
+    loadData(); 
+  },[]) // load data when component mount
+
+  useEffect(()=>{
+    if(loaded){
+      persistData();
+    }
+  },[savedBooks]) // persist data every time it changes
 
   const areBooksTheSame = (a: Book, b: Book) => {
     return JSON.stringify(a) === JSON.stringify(b);
@@ -39,6 +52,21 @@ const MyBooksProvider = ({ children }: Props) => {
       // add to saved
       setSavedBooks((books) => [book, ...books]);
     }
+  };
+
+  const persistData=async ()=>{
+    //write data to local storage
+  await AsyncStorage.setItem("booksData", JSON.stringify(savedBooks));
+  };
+
+  const loadData = async()=>{
+    //read data to local storage
+    const dataString=await AsyncStorage.getItem("booksData");
+    if(dataString){
+      const items= JSON.parse(dataString);
+      setSavedBooks(items);
+    }
+    setLoaded(true);
   };
 
   return (
