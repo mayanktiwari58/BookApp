@@ -42,6 +42,7 @@ const App: React.FC = () => {
               },
               headerTitle: "SearchScreen",
               headerTitleAlign: "center",}}/>
+              
             <Tab.Screen name="MyBook" component={TabTwoScreen}
              options={{
               tabBarIcon:({focused})=>{

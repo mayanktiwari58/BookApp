@@ -1,6 +1,14 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, Pressable, Modal, Button } from 'react-native';
-import { useMyBooks } from '../context/MyBooksProvider';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Pressable,
+  Modal,
+  Button,
+} from "react-native";
+import { useMyBooks } from "../context/MyBooksProvider";
 
 type BookItemProps = {
   book: Book;
@@ -45,14 +53,27 @@ const BookItem = ({ book }: BookItemProps) => {
         onRequestClose={hideMyModal}
       >
         <View style={styles.modalContainer}>
-          <Text   
-          onPress={() => {
-            onToggleSaved(book);
-           
-          }}
-        >
-       
-        This is your modal content</Text>
+          <Text
+          style={[styles.buttonText, saved ? { color: "red" } : {color: "black"}]}
+            onPress={() => {
+              onToggleSaved(book);
+              hideMyModal();
+            }}
+          >
+          {saved ? "Remove" : "Want to Read"}
+          </Text>
+          <Text
+            onPress={() => {
+            }}
+          >
+           Currently Reading
+          </Text>
+          <Text
+            onPress={() => {
+            }}
+          >
+            Already read
+          </Text>
           <Button title="Close" onPress={hideMyModal} />
         </View>
       </Modal>
@@ -94,10 +115,10 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    marginTop:"110%",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    marginTop: "110%",
   },
 });
 
