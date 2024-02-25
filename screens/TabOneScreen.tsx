@@ -18,6 +18,9 @@ const TabOneScreen = () => {
   const [provider, setProvider] = useState<BookProvider>("googleBooksSearch");
 
   const [runQuery, { data, loading, error }] = useLazyQuery(SearchQuery);
+ 
+  //  console.log(data?.googleBooksSearch?.items[0]?.volumeInfo?.title);
+
 
   return (
     <View style={styles.container}>
@@ -70,7 +73,7 @@ const TabOneScreen = () => {
             ? data?.googleBooksSearch?.items
             : data?.openLibrarySearch?.docs || []
         }
-        renderItem={({ item }) => <BookItem book={parseBook(item, provider)} />}
+        renderItem={({ item }) => <BookItem book={parseBook(item, provider)}  />}
         showsVerticalScrollIndicator={false}
       />
     </View>

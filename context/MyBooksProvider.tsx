@@ -2,7 +2,7 @@ import { StyleSheet} from "react-native";
 import React, {useEffect } from "react";
 import { createContext, useContext, ReactNode, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import BookItem from "../components/BookItem";
+
 
 type MyBooksContextType = {
   onToggleSaved: (book: Book) => void;
@@ -43,12 +43,16 @@ const MyBooksProvider = ({ children }: Props) => {
   };
 
   const onToggleSaved = (book: Book) => {
+   
+    
     if (isBookSaved(book)) {
+      console.log("hi");
       // remove from saved
       setSavedBooks((books) =>
         books.filter((savedBook) => !areBooksTheSame(savedBook, book))
       );
     } else {
+      console.log("buy");
       // add to saved
       setSavedBooks((books) => [book, ...books]);
     }

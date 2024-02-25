@@ -1,6 +1,6 @@
-import { View, Text, StyleSheet, Image, Pressable } from "react-native";
-import React from "react";
-import { useMyBooks } from "../context/MyBooksProvider";
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Image, Pressable, Modal, Button } from 'react-native';
+import { useMyBooks } from '../context/MyBooksProvider';
 
 type BookItemProps = {
   book: Book;
@@ -9,6 +9,15 @@ type BookItemProps = {
 const BookItem = ({ book }: BookItemProps) => {
   const { onToggleSaved, isBookSaved } = useMyBooks();
   const saved = isBookSaved(book);
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const showMyModal = () => {
+    setModalVisible(true);
+  };
+
+  const hideMyModal = () => {
+    setModalVisible(false);
+  };
 
   return (
     <View style={styles.container}>
@@ -18,13 +27,35 @@ const BookItem = ({ book }: BookItemProps) => {
         <Text>by {book.authors?.join(", ")}</Text>
         <Pressable
           style={[styles.button, saved ? { backgroundColor: "lightgray" } : {}]}
-          onPress={() => onToggleSaved(book)}
+          onPress={() => {
+            showMyModal();
+          }}
         >
           <Text style={[styles.buttonText, saved ? { color: "#FF0000" } : {}]}>
             {saved ? "Remove" : "Want to Read"}
           </Text>
         </Pressable>
       </View>
+
+      {/* Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={hideMyModal}
+      >
+        <View style={styles.modalContainer}>
+          <Text   
+          onPress={() => {
+            onToggleSaved(book);
+           
+          }}
+        >
+       
+        This is your modal content</Text>
+          <Button title="Close" onPress={hideMyModal} />
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -60,6 +91,13 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#fff",
     fontWeight: "600",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    marginTop:"110%",
   },
 });
 
