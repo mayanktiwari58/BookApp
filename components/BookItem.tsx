@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { useMyBooks } from "../context/MyBooksProvider";
 
-
 type BookItemProps = {
   book: Book;
 };
@@ -28,7 +27,6 @@ const BookItem = ({ book }: BookItemProps) => {
   const currentSaved = isCurrentBookSaved(book);
   const readSaved = isReadBookSaved(book);
   const [isModalVisible, setModalVisible] = useState(false);
- 
 
   const showMyModal = () => {
     setModalVisible(true);
@@ -44,14 +42,23 @@ const BookItem = ({ book }: BookItemProps) => {
         <Text style={styles.title}>{book.title}</Text>
         <Text>{book.authors}</Text>
         <Pressable
-          style={[styles.button, saved ? { backgroundColor: "lightgray" } : {}]}
+          style={[
+            styles.button,
+            saved || currentSaved || readSaved
+              ? { backgroundColor: "lightgray" }
+              : {},
+          ]}
           onPress={() => {
-            
             showMyModal();
           }}
         >
-          <Text style={[styles.buttonText, saved ? { color: "#FF0000" } : {}]}>
-            {saved ? "Remove" : "Want to Read"}
+          <Text
+            style={[
+              styles.buttonText,
+              saved || currentSaved || readSaved ? { color: "#FF0000" } : {},
+            ]}
+          >
+            {saved || currentSaved || readSaved ? "Remove" : "Add Books"}
           </Text>
         </Pressable>
       </View>
@@ -64,47 +71,59 @@ const BookItem = ({ book }: BookItemProps) => {
         onRequestClose={hideMyModal}
       >
         <View style={styles.modalContainer}>
-          <Text
-            style={[
-              styles.SaveText,
-              saved ? { color: "red" } : { color: "black" },
-            ]}
-            onPress={() => {
-              onToggleSaved(book);
-              
-              
-              hideMyModal();
-            }}
-          >
-            {saved ? "Remove" : "Want to Read"}
-          </Text>
-          <Text
-            style={[
-              styles.SaveText,
-              currentSaved ? { color: "red" } : { color: "black" },
-            ]}
-            onPress={() => {
-              onToggleCurrentSaved(book);
-             
-              hideMyModal();
-            }}
-          >
-            {currentSaved ? "Remove" : " Currently Reading"}
-          </Text>
-          <Text
-            style={[
-              styles.SaveText,
-              readSaved ? { color: "red" } : { color: "black" },
-            ]}
-            onPress={() => {
-              onToggleReadSaved(book);
-             
-              hideMyModal();
-            }}
-          >
-            {readSaved ? "Remove" : "Already read"}
-          </Text>
-          <Button title="Close" onPress={hideMyModal} />
+          <View style={styles.mainContainer}>
+            <View style={styles.topContainer}>
+              <Text style={styles.addBooksText}>Add Books</Text>
+              <Pressable onPress={hideMyModal}>
+                <Image
+                  source={require("../../../BookApp/assets/cross.png")}
+                  style={styles.crossIcon}
+                />
+              </Pressable>
+            </View>
+            <Text
+              style={[
+                styles.SaveText,
+                saved
+                  ? { color: "red",borderColor:"red",}
+                  : { color: "#1fd655"},
+              ]}
+              onPress={() => {
+                onToggleSaved(book);
+                hideMyModal();
+              }}
+            >
+              {saved ? "Remove" : "Want to Read"}
+            </Text>
+            <Text
+              style={[
+                styles.SaveText,
+                currentSaved
+                  ? { color: "red",borderColor:"red",}
+                  : { color: "#1fd655"},
+              ]}
+              onPress={() => {
+                onToggleCurrentSaved(book);
+                hideMyModal();
+              }}
+            >
+              {currentSaved ? "Remove" : " Currently Reading"}
+            </Text>
+            <Text
+              style={[
+                styles.SaveText,
+                readSaved
+                  ? { color: "red",borderColor:"red",}
+                  : { color: "#1fd655" },
+              ]}
+              onPress={() => {
+                onToggleReadSaved(book);
+                hideMyModal();
+              }}
+            >
+              {readSaved ? "Remove" : "Already read"}
+            </Text>
+          </View>
         </View>
       </Modal>
     </View>
@@ -115,8 +134,6 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     marginVertical: 10,
-    shadowColor: 'black',
-   
   },
   image: {
     flex: 1,
@@ -146,23 +163,46 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   modalContainer: {
-    flex:1,
-    padding:10,
-    justifyContent:"space-between",
-    alignItems:"flex-start",
-    backgroundColor: "#fff",
-    marginTop: "140%",
-   
-   
+    flex: 1,
+    height: "140%",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
   },
+  mainContainer: {
+    flex: 1,
+    justifyContent: "space-around",
+    marginTop: 400,
+    padding: 20,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    width: "100%",
+  },
+  topContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 5,
+  },
+  addBooksText: {
+    fontSize: 25,
+    fontWeight: "bold",
+  },
+  crossIcon: {
+    width: 24,
+    height: 24,
+  },
+
   SaveText: {
-    
-    backgroundColor: "#1fd655",
+    borderWidth: 2,
     padding: 10,
     borderRadius: 5,
-    alignItems: 'center',
-    alignSelf:"flex-start",
-   
+    alignItems: "center",
+    alignSelf: "flex-start",
+    color:"black",
+    margin: 5,
+    fontWeight: "bold",
+    borderColor:"#1fd655",
   },
 });
 
