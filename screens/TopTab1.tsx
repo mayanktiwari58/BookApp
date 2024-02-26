@@ -2,11 +2,6 @@ import { StyleSheet, View, FlatList } from "react-native";
 import React from "react";
 import { useMyBooks } from "../context/MyBooksProvider";
 import BookItem from "../components/BookItem";
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-
-
-
-const Tab = createMaterialTopTabNavigator();
 
 
 const TopTab1 = () => {

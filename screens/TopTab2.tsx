@@ -1,14 +1,26 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, View, FlatList } from "react-native";
+import React from "react";
+import { useMyBooks } from "../context/MyBooksProvider";
+import BookItem from "../components/BookItem";
+
 
 const TopTab2 = () => {
+  const { currentBooks } = useMyBooks();
   return (
-    <View>
-      <Text>TopTab2</Text>
+    <View style={styles.container}>
+      <FlatList
+        data={currentBooks}
+        renderItem={({ item }) => <BookItem book={item} />}
+      />
     </View>
-  )
-}
+  );
+};
 
-export default TopTab2
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 10,
+  },
+});
 
-const styles = StyleSheet.create({})
+export default TopTab2;
