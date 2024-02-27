@@ -4,13 +4,12 @@ import { useMyBooks } from "../context/MyBooksProvider";
 import BookItem from "../components/BookItem";
 
 
-
-const TopTab3 = () => {
-  const { readBooks } = useMyBooks();
+const SavedScreen = () => {
+  const { savedBooks } = useMyBooks();
   return (
     <View style={styles.container}>
       <FlatList
-        data={readBooks}
+        data={savedBooks}
         renderItem={({ item }) => <BookItem book={item} />}
       />
     </View>
@@ -24,4 +23,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TopTab3;
+export default SavedScreen;

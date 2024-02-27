@@ -4,7 +4,7 @@ import { useMyBooks } from "../context/MyBooksProvider";
 import BookItem from "../components/BookItem";
 
 
-const TopTab2 = () => {
+const CurrentScreen = () => {
   const { currentBooks } = useMyBooks();
   return (
     <View style={styles.container}>
@@ -23,4 +23,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TopTab2;
+export default CurrentScreen ;
