@@ -33,7 +33,7 @@ const App: React.FC = () => {
              options={{
               tabBarIcon:({focused})=>{
                 return(
-                  <Image source={require("../../../BookApp/assets/book-search.png")}
+                  <Image source={require("./assets/book-search.png")}
                   style={styles.iconStyle}/>
                 )
             },
@@ -47,7 +47,7 @@ const App: React.FC = () => {
              options={{
               tabBarIcon:({focused})=>{
                 return(
-                  <Image source={require("../../../BookApp/assets/book.png")}
+                  <Image source={require("./assets/book.png")}
                   style={styles.iconStyleTwo}/>
                 )
             },
